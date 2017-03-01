@@ -20,13 +20,15 @@ public:
 
   void setMeshGt(Polyhedron*& mesh) {
     mesh_ = mesh;
+
+    std::cout << "mesh_->size_of_vertices(): " << mesh_->size_of_vertices() << std::endl << std::endl << std::endl << std::endl;
   }
 
-  void computeMap(const CameraType &cam,int nnum=0);
+  cimg_library::CImg<float> computeMap(const CameraType &cam,int nnum=0, std::string filname = "");
 
-  const cimg_library::CImg<float>& getDepth() const {
-    return depth;
-  }
+//  const cimg_library::CImg<float>& getDepth() const {
+//    return depth;
+//  }
 
 private:
 
@@ -36,7 +38,7 @@ private:
 
   Polyhedron *mesh_;
   CameraType curCam;
-  cimg_library::CImg<float> depth;
+//  cimg_library::CImg<float> depth_;
 };
 
 } /* namespace reconstructorEvaluator */

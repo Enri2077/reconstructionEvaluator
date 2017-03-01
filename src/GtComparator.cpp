@@ -51,16 +51,20 @@ void GtComparator::run() {
 //  fileTest2 << meshGt_;
 //  std::cout<<"DONE."<<std::endl;
 
-  for (int curFrame = configuration_.getInitFrame(); curFrame < configuration_.getLastFrame(); ++curFrame) {
-    std::cout << "GtComparator:: collecting errors frame num " << curFrame;
+  for (int curFrame = configuration_.getInitFrame(); curFrame < configuration_.getLastFrame(); curFrame += configuration_.getStep()) {
+    std::cout << "GtComparator:: collecting errors frame num " << curFrame << std::endl;
     std::cout.flush();
+
     DepthMapFromMesh dmfm(&meshToBeCompared_);
-    dmfm.computeMap(configuration_.getCameras()[curFrame], curFrame);
+//    dmfm.computeMap(configuration_.getCameras()[curFrame], curFrame, configuration_.getOuputFilename());
     DepthFromVelodyne frv(configuration_.getGtPath(), configuration_.getCameras()[0].imageHeight, configuration_.getCameras()[0].imageWidth);
 
     frv.createDepthFromIdx(curFrame+1);
 
-    accumulateDepthMaps(frv.getDepth(), dmfm.getDepth());
+    std::cout << "GtComparator::computeMap" << std::endl;
+    cimg_library::CImg<float> meshDepthMap = dmfm.computeMap(configuration_.getCameras()[curFrame], curFrame, configuration_.getOuputFilename());
+
+    accumulateDepthMaps(frv.getDepth(), meshDepthMap);
     countImages_++;
     std::cout << "DONE." << std::endl;
   }
@@ -346,6 +350,7 @@ void GtComparator::printComparison() {
 
   int totNum = std::accumulate(histError.begin(), histError.end(), 0);
 
+  std::cout << "Errors histogram \tnumBin: " << numBin << "\tminEl: " << minEl << "\tmaxEl: " << maxEl << std::endl;
   std::cout << "Errors histogram (%): " << std::endl;
   for (auto c : histError) {
     std::cout << setfill(' ') << setw(10) << std::fixed << std::setprecision(1);
@@ -358,6 +363,32 @@ void GtComparator::printComparison() {
     std::cout << c << " ";
   }
   std::cout << std::endl;
+
+
+  std::ofstream f;
+  f.open(configuration_.getOuputFilename().c_str());
+  f << fixed;
+
+  f << "Error statistics: " << std::endl;
+  f << "mean: " << res.mean << std::endl;
+  f << "stddev: " << res.stddev << std::endl;
+  f << "RMSE: " << res.rmse << std::endl;
+  f << "mae: " << res.mae << std::endl;
+
+  f << "Errors histogram \tnumBin: " << numBin << "\tminEl: " << minEl << "\tmaxEl: " << maxEl << std::endl;
+  f << "Errors histogram (%): " << std::endl;
+  for (auto c : histError) {
+    f << setfill(' ') << setw(10) << std::fixed << std::setprecision(1);
+    f << 100.0 * static_cast<float>(c) / totNum << " ";
+  }
+  f << std::endl;
+  f << "Errors histogram: (num)" << std::endl;
+  for (auto c : histError) {
+    f << setfill(' ') << setw(10) << std::fixed << std::setprecision(1);
+    f << c << " ";
+  }
+  f << std::endl;
+  f.close();
 
 }
 

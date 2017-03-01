@@ -74,7 +74,7 @@ void OpenMvgParser::parseViews(const std::map<int, glm::mat3> & intrinsics, cons
         glm::mat4 eMatrix(0.0), kMatrix(0.0);
         for (int curR = 0; curR < 3; curR++) {
           for (int curC = 0; curC < 3; curC++) {
-            eMatrix[curR][curC] = cameras_[curCam].rotation[curR][curC];
+            eMatrix[curR][curC] = cameras_[curCam].rotation[curC][curR];
           }
         }
         eMatrix[0][3] = cameras_[curCam].translation[0];

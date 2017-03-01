@@ -7,12 +7,17 @@
 
 #include <GtComparator.h>
 
+int main(int argc, char **argv) {
 
-  int main(int argc, char **argv) {
+	if (argc < 2) {
+		std::cerr << std::endl
+				<< "Usage: ./reconstructionEvaluator path_to_settings"
+				<< std::endl;
+		return 1;
+	}
 
-
-  reconstructorEvaluator::GtComparator comparator("/home/andrea/workspaceC/reconstructionEvaluator/config/kitti2.config");
-  comparator.run();
+	reconstructorEvaluator::GtComparator comparator(argv[1]);
+	comparator.run();
 
 }
 

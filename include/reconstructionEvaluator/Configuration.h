@@ -35,6 +35,10 @@ public:
     return meshPath_;
   }
 
+  const std::string& getOuputFilename() const {
+    return ouputFilename_;
+  }
+
   const std::string& getGtPath() const {
     return gtPath_;
   }
@@ -51,17 +55,23 @@ public:
     return lastFrame_;
   }
 
+  const int& getStep() const {
+    return step_;
+  }
+
 private:
   std::ifstream file_;
   bool parseWhichCams(const std::string &path);
 
   std::string meshPath_;
+  std::string ouputFilename_;
   std::string gtPath_;
   std::vector<CameraType> cameras_;
   std::vector<CameraType> camerasGt_;
   std::vector<int> camerasIdx_;
   int initFrame_;
   int lastFrame_;
+  int step_;
 
 };
 

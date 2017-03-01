@@ -1,0 +1,6 @@
+*~
+/output/
+.cproject
+.project
+CMakeCache.txt
+

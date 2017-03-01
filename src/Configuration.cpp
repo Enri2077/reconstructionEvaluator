@@ -19,6 +19,7 @@ Configuration::Configuration(const std::string &path) {
     std::cout << "Error reading " << path << std::endl;
   initFrame_ = 0;
   lastFrame_ = 0;
+  step_ = 1;
 }
 
 void Configuration::setConfiguration(const std::string &path) {
@@ -31,6 +32,7 @@ void Configuration::setConfiguration(const std::string &path) {
 Configuration::Configuration() {
   initFrame_ = 0;
   lastFrame_ = 0;
+  step_ = 1;
 }
 Configuration::~Configuration() {
 }
@@ -65,6 +67,8 @@ void Configuration::parse() {
   }
   utilities::readLineAndStore(file_, initFrame_);
   utilities::readLineAndStore(file_, lastFrame_);
+  utilities::readLineAndStore(file_, step_);
+  utilities::readLineAndStore(file_, ouputFilename_);
 
 }
 
